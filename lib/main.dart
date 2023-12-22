@@ -7,6 +7,7 @@ import 'package:shopapp/screens/splash_screen.dart';
 import 'package:shopapp/screens/tab_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:badges/badges.dart';
 
 late Size mq ;
 Future<void> main() async {

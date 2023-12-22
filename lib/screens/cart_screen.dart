@@ -92,26 +92,26 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 15, vertical: 5),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen(getIndex: cartList[index],),));
-                            },
-                            child: SizedBox(
-                              width: double.infinity,
-                              height: 120,
-                              child: Card(
-                                elevation: 8,
-                                color: Colors.white,
-                                surfaceTintColor: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(7.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Card(
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 120,
+                            child: Card(
+                              elevation: 8,
+                              color: Colors.white,
+                              surfaceTintColor: Colors.white,
+                              child: Padding(
+                                padding: const EdgeInsets.all(7.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen(getIndex: cartList[index],),));
+                                          },
+                                          child: Card(
                                             elevation: 8,
                                             color: Colors.white,
                                             surfaceTintColor: Colors.white,
@@ -127,148 +127,117 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                               ),
                                             ),
                                           ),
-                                          const SizedBox(
-                                            width: 5,
-                                          ),
-                                          SizedBox(
-                                            width: 90,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  cartList[index]["title"],
-                                                  style: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  maxLines: 1,
-                                                ),
-                                                const SizedBox(
-                                                  height: 3,
-                                                ),
-                                                Text(cartList[index]["category"]),
-                                                const Expanded(child: SizedBox()),
-                                                Text(
-                                                  "\$  ${cartList[index]["price"]}",
-                                                  style: const TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InkWell(
-                                              onTap: () {
-                                                ref
-                                                    .read(itemsProvider.notifier)
-                                                    .removeItem(cartList[index]);
-                                              },
-                                              child: const Card(
-                                                  margin: EdgeInsets.zero,
-                                                  elevation: 10,
-                                                  color: Colors.white,
-                                                  surfaceTintColor: Colors.white,
-                                                  child: Icon(
-                                                    Icons.dangerous_sharp,
-                                                    color: Colors.red,
-                                                  ))),
-                                          Row(
+                                        ),
+                                        const SizedBox(
+                                          width: 5,
+                                        ),
+                                        SizedBox(
+                                          width: 90,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    ref
-                                                        .watch(itemCountsProvider
-                                                            .notifier)
-                                                        .increment(index);
-                                                  });
-                                                },
-                                                child: SizedBox(
-                                                  width: 23,
-                                                  height: 23,
-                                                  child: Card(
-                                                      elevation: 5,
-                                                      margin: EdgeInsets.zero,
-                                                      color: Constant.pink,
-                                                      surfaceTintColor:
-                                                          Constant.pink,
-                                                      child: const Center(
-                                                          child: Text(
-                                                        "+",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 18,
-                                                            color: Colors.white),
-                                                      ))),
+                                              Text(
+                                                cartList[index]["title"],
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
                                                 ),
+                                                maxLines: 1,
                                               ),
-                            // Count
-                                              SizedBox(
-                                                width: 30,
-                                                height: 30,
+                                              const SizedBox(
+                                                height: 3,
+                                              ),
+                                              Text(cartList[index]["category"]),
+                                              const Expanded(child: SizedBox()),
+                                              Text(
+                                                "\$  ${cartList[index]["price"]}",
+                                                style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        InkWell(
+                                            onTap: () {ref.read(itemsProvider.notifier).removeItem(cartList[index]);
+                                            },
+                                            child: const Card(
+                                                margin: EdgeInsets.zero,
+                                                elevation: 10,
+                                                color: Colors.white,
+                                                surfaceTintColor: Colors.white,
+                                                child: Icon(
+                                                  Icons.dangerous_sharp,
+                                                  color: Colors.red,
+                                                ))),
+                                        Row(
+                                          children: [
+                                            InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  ref.watch(itemCountsProvider.notifier).increment(index);
+                                                });
+                                              },
+                                              child: SizedBox(
+                                                width: 23,
+                                                height: 23,
                                                 child: Card(
                                                     elevation: 5,
                                                     margin: EdgeInsets.zero,
-                                                    color: Colors.white,
-                                                    shape: const StadiumBorder(),
-                                                    surfaceTintColor:
-                                                        Colors.white,
-                                                    child: Center(
-                                                        child: Text(
-                                                      itemCount.toString(),
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18,
-                                                      ),
+                                                    color: Constant.pink,
+                                                    surfaceTintColor: Constant.pink,
+                                                    child: const Center(
+                                                        child: Text("+",
+                                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
                                                     ))),
                                               ),
-                                              InkWell(
-                                                onTap: () {
-                                                  setState(() {
-                                                    ref
-                                                        .watch(itemCountsProvider
-                                                            .notifier)
-                                                        .decrement(index);
-                                                  });
-                                                },
-                                                child: SizedBox(
-                                                  width: 23,
-                                                  height: 23,
-                                                  child: Card(
-                                                      elevation: 5,
-                                                      margin: EdgeInsets.zero,
-                                                      color: Constant.pink,
-                                                      surfaceTintColor:
-                                                          Constant.pink,
-                                                      child: const Center(
-                                                          child: Text(
-                                                        "-",
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 18,
-                                                            color: Colors.white),
-                                                      ))),
+                                            ),
+                          // Count
+                                            SizedBox(
+                                              width: 30,
+                                              height: 30,
+                                              child: Center(
+                                                  child: Text(
+                                                itemCount.toString(),
+                                                style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 18,
                                                 ),
+                                              )),
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                setState(() {
+                                                  ref.watch(itemCountsProvider.notifier).decrement(index);
+                                                });
+                                              },
+                                              child: SizedBox(
+                                                width: 23,
+                                                height: 23,
+                                                child: Card(
+                                                    elevation: 5,
+                                                    margin: EdgeInsets.zero,
+                                                    color: Constant.pink,
+                                                    surfaceTintColor: Constant.pink,
+                                                    child: const Center(
+                                                        child: Text("-",
+                                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.white),
+                                                    ))),
                                               ),
-                                            ],
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                  ],
                                 ),
                               ),
                             ),

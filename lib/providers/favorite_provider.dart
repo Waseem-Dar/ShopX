@@ -20,9 +20,10 @@ class ItemsNotifier extends StateNotifier<List<dynamic>> {
   }
 }
 
-
-
-
+final favoriteItemsCountProvider = Provider<int>((ref) {
+  final items = ref.watch(favoriteItemsProvider);
+  return items.length;
+});
 
 
 

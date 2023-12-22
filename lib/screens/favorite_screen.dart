@@ -16,6 +16,8 @@ class FavoriteScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final  items = ref.watch(favoriteItemsProvider);
+    int favoriteCount;
+    favoriteCount = items.length;
     return Scaffold(
       drawer: const ShowDrawer(),
       appBar: AppBar(

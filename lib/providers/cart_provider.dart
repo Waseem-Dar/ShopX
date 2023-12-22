@@ -23,6 +23,14 @@ class ItemsNotifier extends StateNotifier<List<dynamic>> {
 }
 
 
+
+final CartItemsCountProvider = Provider<int>((ref) {
+  final items = ref.watch(itemsProvider);
+  return items.length;
+});
+
+
+
 final itemCountsProvider = StateNotifierProvider<ItemCountsNotifier, List<int>>((ref) {
   final cartList = ref.watch(itemsProvider);
   return ItemCountsNotifier(List<int>.generate(cartList.length, (index) => 1));
@@ -31,7 +39,6 @@ final itemCountsProvider = StateNotifierProvider<ItemCountsNotifier, List<int>>(
 
 class ItemCountsNotifier extends StateNotifier<List<int>> {
   ItemCountsNotifier(List<int> initialCounts) : super(initialCounts);
-
 
   void increment(int index) {
     if (index >= 0 && index < state.length) {
@@ -47,7 +54,6 @@ class ItemCountsNotifier extends StateNotifier<List<int>> {
   }
 }
 
-// final List total = [];
 
 final totalPriceProvider = Provider<double>((ref) {
   final cartList = ref.watch(itemsProvider);
