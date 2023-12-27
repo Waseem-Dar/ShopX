@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shopapp/screens/home_screen.dart';
 
 
 
@@ -25,15 +26,15 @@ class ItemsNotifier extends StateNotifier<List<dynamic>> {
 
 
 final CartItemsCountProvider = Provider<int>((ref) {
-  final items = ref.watch(itemsProvider);
-  return items.length;
+  final items = ref.watch(cartStreamProvider);
+  return items.value!.docs.length;
 });
 
 
 
 final itemCountsProvider = StateNotifierProvider<ItemCountsNotifier, List<int>>((ref) {
-  final cartList = ref.watch(itemsProvider);
-  return ItemCountsNotifier(List<int>.generate(cartList.length, (index) => 1));
+  final cartList = ref.watch(cartStreamProvider);
+  return ItemCountsNotifier(List<int>.generate(cartList.value!.docs.length, (index) => 1));
 });
 
 
@@ -54,17 +55,17 @@ class ItemCountsNotifier extends StateNotifier<List<int>> {
   }
 }
 
-
-final totalPriceProvider = Provider<double>((ref) {
-  final cartList = ref.watch(itemsProvider);
-  final itemCounts = ref.watch(itemCountsProvider);
-
-  double total = 0;
-
-  for (int i = 0; i < cartList.length; i++) {
-    total += cartList[i]['price'] * itemCounts[i];
-    log("${itemCounts[i]}");
-  }
-  return total;
-}); 
-
+//
+// final totalPriceProvider = Provider<double>((ref) {
+//   final cartList = ref.watch(itemsProvider);
+//   final itemCounts = ref.watch(itemCountsProvider);
+//
+//   double total = 0;
+//
+//   for (int i = 0; i < cartList.length; i++) {
+//     total += cartList[i]['price'] * itemCounts[i];
+//     log("${itemCounts[i]}");
+//   }
+//   return total;
+// });
+//

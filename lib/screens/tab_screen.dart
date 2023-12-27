@@ -29,6 +29,7 @@ final List _tabs = [
 class _TabScreenState extends ConsumerState<TabScreen> {
   @override
   Widget build(BuildContext context ) {
+    final itemCount = ref.watch(favoriteStreamProvider);
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -53,17 +54,18 @@ class _TabScreenState extends ConsumerState<TabScreen> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Consumer(
-                builder: (context, ref, _) {
-                  final itemCount = ref.watch(favoriteItemsCountProvider);
-                  final isEmpty = itemCount > 0;
+              icon:itemCount.when(
+                loading: () => CircularProgressIndicator(),
+                error: (error, _) => Text(""),
+                data: (data) {
+                 final count = data.docs.length;
                   return Badge(
 
                     backgroundColor: Colors.red,
                     padding: EdgeInsets.symmetric(horizontal: 5),
                     offset: const Offset(10, -10),
-                    label: Text(itemCount.toString()),
-                    isLabelVisible: isEmpty,
+                    label: Text(count.toString()),
+                    isLabelVisible:count==0?false:true,
                     child: Icon(
                       _currentIndex == 1
                           ? Icons.favorite

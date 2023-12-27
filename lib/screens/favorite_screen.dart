@@ -6,18 +6,21 @@ import 'package:shopapp/providers/favorite_provider.dart';
 import 'package:shopapp/providers/home_provider.dart';
 import 'package:shopapp/screens/Notification_screen.dart';
 import 'package:shopapp/screens/details_screen.dart';
+import 'package:shopapp/screens/home_screen.dart';
 import 'package:shopapp/widget/drawer.dart';
 
+import '../providers/apis.dart';
 import '../widget/constant.dart';
 
 class FavoriteScreen extends ConsumerWidget {
   const FavoriteScreen({super.key});
 
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final  items = ref.watch(favoriteItemsProvider);
-    int favoriteCount;
-    favoriteCount = items.length;
+    final  items = ref.watch(favoriteStreamProvider);
+    // int favoriteCount;
+    // favoriteCount = items.length;
     return Scaffold(
       drawer: const ShowDrawer(),
       appBar: AppBar(
@@ -31,7 +34,7 @@ class FavoriteScreen extends ConsumerWidget {
           }, icon:const  Icon(Icons.notifications_none))
         ],
       ),
-      body:items.isEmpty? Center(
+      body:items.value!.docs.isEmpty?  Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -39,91 +42,108 @@ class FavoriteScreen extends ConsumerWidget {
             const Text("No favorite items available"),
           ],
         ),
-      ):SingleChildScrollView(
-        padding:EdgeInsets.symmetric(horizontal: 5,vertical: 3),
-        scrollDirection: Axis.vertical,
-        child: MasonryGridView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: items.length,
-          shrinkWrap: true,
-          gridDelegate:
-          const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2),
-          itemBuilder: (context, index) {
-            return  InkWell(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen(getIndex: items[index]),));
-              },
-              child: Card(
-                color: Colors.white,
-                surfaceTintColor: Colors.white,
-                elevation: 5,
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.all(15),
-                        width: double.infinity,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          // color:Colors.grey,
-                          image: DecorationImage(
-                              image:
-                              NetworkImage(items[index]['image'])),
-                        ),
-                      ),
-                      Row(
+      )
+        :items.when(
+        data: (data) {
+          return SingleChildScrollView(
+            padding:EdgeInsets.symmetric(horizontal: 5,vertical: 3),
+            scrollDirection: Axis.vertical,
+            child: MasonryGridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: data.docs.length,
+              shrinkWrap: true,
+              gridDelegate:
+              const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2),
+              itemBuilder: (context, index) {
+                return  InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen(getIndex: data.docs[index]),));
+                  },
+                  child: Card(
+                    color: Colors.white,
+                    surfaceTintColor: Colors.white,
+                    elevation: 5,
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
                         children: [
-                          SizedBox(
-                              width: 100,
-                              child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    items[index]['title'],
-                                    style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold),
-                                    maxLines: 1,
-                                  ),
-                                  RatingBar.builder(
-                                    itemSize: 15,
-                                    initialRating: items[index]['rating']['rate'] == 3?3.0:items[index] ['rating']['rate'],
-                                    minRating: 1,
-                                    direction: Axis.horizontal,
-                                    allowHalfRating: true,
-                                    itemCount: 5,
-                                    unratedColor: Colors.grey,
-                                    itemPadding:
-                                    const EdgeInsets.only(right: 2),
-                                    itemBuilder: (context, _) =>
-                                    const Icon(Icons.star, color: Colors.amber,
-                                    ),
-                                    onRatingUpdate: (rating) {
-                                    },
-                                  ),
-                                  Text('\$ ${items[index]['price']}', style: const TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              )),
-                          IconButton(
-                              onPressed: () {
-                                ref.read(favoriteItemsProvider.notifier).removeItem(items[index]);
-                              },
-                              icon:  Icon(items.contains(items[index])?Icons.favorite:Icons.favorite_border_outlined))
+                          Container(
+                            margin: const EdgeInsets.all(15),
+                            width: double.infinity,
+                            height: 200,
+                            decoration: BoxDecoration(
+                              // color:Colors.grey,
+                              image: DecorationImage(
+                                  image:
+                                  NetworkImage(data.docs[index]['image'])),
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              SizedBox(
+                                  width: 100,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        data.docs[index]['title'],
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                        maxLines: 1,
+                                      ),
+                                      RatingBar.builder(
+                                        itemSize: 15,
+                                        initialRating: data.docs[index]['rating']['rate'] == 3?3.0:data.docs[index] ['rating']['rate'],
+                                        minRating: 1,
+                                        direction: Axis.horizontal,
+                                        allowHalfRating: true,
+                                        itemCount: 5,
+                                        unratedColor: Colors.grey,
+                                        itemPadding:
+                                        const EdgeInsets.only(right: 2),
+                                        itemBuilder: (context, _) =>
+                                        const Icon(Icons.star, color: Colors.amber,
+                                        ),
+                                        onRatingUpdate: (rating) {
+                                        },
+                                      ),
+                                      Text('\$ ${data.docs[index]['price']}', style: const TextStyle(fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  )),
+                              IconButton(
+                                  onPressed: ()async {
+                                    await Apis.toggleFavorites(data.docs[index]);
+                                  },
+                                  icon:  Icon(Icons.favorite))
+                            ],
+                          ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            );
-          },
-        ),
+                );
+              },
+            ),
+          );
+        } ,
+        error: (err, stack) {
+          return Text("error");
+        } ,
+        loading: () {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Constant.pink,
+            ),
+          );
+        },
+
       ),
-      
+
+
 
         );
   }

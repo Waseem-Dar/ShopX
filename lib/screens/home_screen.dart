@@ -1,25 +1,41 @@
-import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:shopapp/providers/home_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shopapp/main.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:shopapp/providers/favorite_provider.dart';
 import 'package:shopapp/screens/details_screen.dart';
 import 'package:shopapp/widget/constant.dart';
 import 'package:shopapp/widget/drawer.dart';
 import 'package:shopapp/widget/shimmer_loader.dart';
-
+import '../providers/apis.dart';
 import 'Notification_screen.dart';
+
+
+final productsStreamProvider =
+StreamProvider<QuerySnapshot<Map<String, dynamic>>>((ref) {
+  return FirebaseFirestore.instance.collection('products').snapshots();
+});
+
+
+final favoriteStreamProvider =
+StreamProvider<QuerySnapshot<Map<String, dynamic>>>((ref) {
+  return FirebaseFirestore.instance.collection('favorites').snapshots();
+});
+final cartStreamProvider =
+StreamProvider<QuerySnapshot<Map<String, dynamic>>>((ref) {
+  return FirebaseFirestore.instance.collection('cart').snapshots();
+});
+
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final items = ref.watch(favoriteItemsProvider);
-    var productData = ref.watch(futureProductProvider);
+
+    // var productData = ref.watch(futureProductProvider);
+    final data = ref.watch(productsStreamProvider);
     mq = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -141,13 +157,13 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    productData.when(data: (data) {
+                    data.when(data: (data) {
                       return SizedBox(
                         height: 260,
                         child: ListView.builder(
                           physics: const BouncingScrollPhysics(),
                           scrollDirection: Axis.horizontal,
-                          itemCount: data.length,
+                          itemCount: data.docs.length,
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () {
@@ -155,7 +171,7 @@ class HomeScreen extends ConsumerWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => DetailScreen(
-                                              getIndex: data[index],
+                                              getIndex: data.docs[index],
                                             )));
                               },
                               child: Card(
@@ -174,7 +190,7 @@ class HomeScreen extends ConsumerWidget {
                                           decoration: BoxDecoration(
                                               image: DecorationImage(
                                                   image: NetworkImage(
-                                                      data[index]["image"]),
+                                                      data.docs[index]["image"]),
                                                   fit: BoxFit.fitHeight)),
                                         ),
                                         const SizedBox(
@@ -193,7 +209,7 @@ class HomeScreen extends ConsumerWidget {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    data[index]["title"],
+                                                    data.docs[index]["title"],
                                                     style: const TextStyle(
                                                       fontWeight: FontWeight.bold,
                                                       fontSize: 18,
@@ -202,8 +218,8 @@ class HomeScreen extends ConsumerWidget {
                                                   ),
                                                   RatingBar.builder(
                                                     itemSize: 15,
-                                                    initialRating: data[index]['rating']['rate'] == 3
-                                                        ? 3.0 : data[index]['rating']['rate'],
+                                                    initialRating: data.docs[index]['rating']['rate'] == 3
+                                                        ? 3.0 : data.docs[index]['rating']['rate'],
                                                     minRating: 1,
                                                     direction: Axis.horizontal,
                                                     allowHalfRating: true,
@@ -222,7 +238,7 @@ class HomeScreen extends ConsumerWidget {
                                                   SizedBox(
                                                     width: 150,
                                                     child: Text(
-                                                      data[index]["description"],
+                                                      data.docs[index]["description"],
                                                       style: const TextStyle(
                                                           color: Colors.black45,
                                                           fontSize: 12),
@@ -233,7 +249,7 @@ class HomeScreen extends ConsumerWidget {
                                               ),
                                             ),
                                             Text(
-                                              "\$ ${data[index]["price"]}",
+                                              "\$ ${data.docs[index]["price"]}",
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18,
@@ -283,11 +299,12 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-                    productData.when(
+
+                    data.when(
                       data: (data) {
                         return MasonryGridView.builder(
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: data.length,
+                          itemCount: data.docs.length,
                           shrinkWrap: true,
                           gridDelegate:
                               const SliverSimpleGridDelegateWithFixedCrossAxisCount(
@@ -299,7 +316,7 @@ class HomeScreen extends ConsumerWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => DetailScreen(
-                                        getIndex: data[index],
+                                        getIndex: data.docs[index],
                                       ),
                                     ));
                               },
@@ -319,7 +336,7 @@ class HomeScreen extends ConsumerWidget {
                                           // color:Colors.grey,
                                           image: DecorationImage(
                                               image: NetworkImage(
-                                                  data[index]['image'])),
+                                                  data.docs[index]['image'])),
                                         ),
                                       ),
                                       Row(
@@ -331,7 +348,7 @@ class HomeScreen extends ConsumerWidget {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    data[index]['title'],
+                                                    data.docs[index]['title'],
                                                     style: const TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
@@ -340,12 +357,12 @@ class HomeScreen extends ConsumerWidget {
                                                   ),
                                                   RatingBar.builder(
                                                     itemSize: 15,
-                                                    initialRating: data[index]
+                                                    initialRating: data.docs[index]
                                                                     ['rating']
                                                                 ['rate'] ==
                                                             3
                                                         ? 3.0
-                                                        : data[index]['rating']
+                                                        : data.docs[index]['rating']
                                                             ['rate'],
                                                     minRating: 1,
                                                     direction: Axis.horizontal,
@@ -363,7 +380,7 @@ class HomeScreen extends ConsumerWidget {
                                                     onRatingUpdate: (rating) {},
                                                   ),
                                                   Text(
-                                                    '\$ ${data[index]['price']}',
+                                                    '\$ ${data.docs[index]['price']}',
                                                     style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -371,23 +388,27 @@ class HomeScreen extends ConsumerWidget {
                                                 ],
                                               )),
                                           IconButton(
-                                              onPressed: () {
-                                                if (items.contains(data[index])) {
-                                                  ref
-                                                      .read(favoriteItemsProvider
-                                                          .notifier)
-                                                      .removeItem(data[index]);
-                                                } else {
-                                                  ref
-                                                      .read(favoriteItemsProvider
-                                                          .notifier)
-                                                      .addItem(data[index]);
-                                                  log(index.toString());
-                                                }
+                                              onPressed: () async {
+                                                await Apis.toggleFavorites(data.docs[index]);
+
                                               },
-                                              icon: Icon(items.contains(data[index])
-                                                  ? Icons.favorite
-                                                  : Icons.favorite_border_outlined))
+                                            icon: Consumer(
+                                              builder: (context, ref, child) {
+                                                final favoritesSnapshot = ref.watch(favoriteStreamProvider);
+
+                                                // Check if the product exists in the favorites collection
+                                                final isFav = favoritesSnapshot.maybeWhen(
+                                                  data: (docs) {
+                                                    return docs.docs.any((favDoc) => favDoc.id == data.docs[index].id);
+                                                  },
+                                                  orElse: () => false,
+                                                ) ?? false;
+                                                return Icon(
+                                                  isFav ? Icons.favorite : Icons.favorite_border_outlined,
+
+                                                );
+                                              },
+                                            ),)
                                         ],
                                       ),
                                     ],
@@ -401,9 +422,7 @@ class HomeScreen extends ConsumerWidget {
                       error: (error, stackTrace) => const Center(
                           child: Text("Please check network connection")),
                       loading: () {
-                        return Center(
-                          child: CircularProgressIndicator(color: Constant.pink),
-                        );
+                        return SizedBox();
                       },
                     )
                   ],

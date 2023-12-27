@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shopapp/main.dart';
 import 'package:shopapp/providers/cart_provider.dart';
 import 'package:shopapp/providers/home_provider.dart';
 import 'package:shopapp/providers/favorite_provider.dart';
 import 'package:shopapp/widget/constant.dart';
+
+import '../providers/apis.dart';
+import 'home_screen.dart';
 
 class DetailScreen extends ConsumerWidget {
   final  dynamic getIndex;
@@ -67,13 +71,25 @@ class DetailScreen extends ConsumerWidget {
                       shape: const StadiumBorder(),
                       child: IconButton(
                         onPressed: () {
-                          if (items.contains(getIndex)) {
-                            ref.read(favoriteItemsProvider.notifier).removeItem(getIndex);
-                          } else {
-                            ref.read(favoriteItemsProvider.notifier).addItem(getIndex);
-                          }
+                          Apis.toggleFavorites(getIndex);
                         },
-                        icon: Icon(items.contains(getIndex)?Icons.favorite:Icons.favorite_border_outlined, color: Constant.pink, size: 30,),
+                        icon: Consumer(
+                          builder: (context, ref, child) {
+                            final favoritesSnapshot = ref.watch(favoriteStreamProvider);
+
+                            // Check if the product exists in the favorites collection
+                            final isFav = favoritesSnapshot.maybeWhen(
+                              data: (docs) {
+                                return docs.docs.any((favDoc) => favDoc.id == getIndex.id);
+                              },
+                              orElse: () => false,
+                            ) ?? false;
+                            return Icon(
+                              isFav ? Icons.favorite : Icons.favorite_border_outlined,color: Constant.pink,size: 30 ,
+
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],
@@ -131,17 +147,18 @@ class DetailScreen extends ConsumerWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Constant.pink,
                   ),
-                  onPressed: (){
-                    if (cartItems.contains(getIndex)) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          duration: Duration(seconds: 1),
-                          content: Text('Item is already in the cart.'),
-                        ),
-                      );
-                    } else {
-                      ref.read(itemsProvider.notifier).addItem(getIndex);
-                    }
+                  onPressed: ()async{
+                    await Apis.toggleCart(getIndex);
+                    // if (cartItems.contains(getIndex)) {
+                    //   Fluttertoast.showToast(
+                    //     msg: "Already added",
+                    //       gravity: ToastGravity.CENTER,
+                    //       backgroundColor: Colors.black54,
+                    //       fontSize: 16.0
+                    //   );
+                    // } else {
+                    //   ref.read(itemsProvider.notifier).addItem(getIndex);
+                    // }
                   }, child: const Text('Add To Cart',style: TextStyle(color: Colors.white),)),
             ),
           )
