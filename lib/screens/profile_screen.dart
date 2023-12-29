@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shopapp/providers/profile_provider.dart';
-import 'package:shopapp/screens/profile_edit_screen.dart';
 import '../main.dart';
-import '../widget/drawer.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -147,6 +145,7 @@ class ProfileScreen extends ConsumerWidget {
             width: 140,
             height: 140,
             decoration: BoxDecoration(
+              color: Colors.white,
                 image: DecorationImage(
                     image: NetworkImage(userdata.photoURL.toString()),
                     fit: BoxFit.cover),

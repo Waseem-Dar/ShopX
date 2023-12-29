@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
@@ -9,23 +11,11 @@ import 'package:shopapp/widget/constant.dart';
 import 'package:shopapp/widget/drawer.dart';
 import 'package:shopapp/widget/shimmer_loader.dart';
 import '../providers/apis.dart';
+import '../providers/all_provider.dart';
 import 'Notification_screen.dart';
+import 'package:http/http.dart' as http;
 
 
-final productsStreamProvider =
-StreamProvider<QuerySnapshot<Map<String, dynamic>>>((ref) {
-  return FirebaseFirestore.instance.collection('products').snapshots();
-});
-
-
-final favoriteStreamProvider =
-StreamProvider<QuerySnapshot<Map<String, dynamic>>>((ref) {
-  return FirebaseFirestore.instance.collection('favorites').snapshots();
-});
-final cartStreamProvider =
-StreamProvider<QuerySnapshot<Map<String, dynamic>>>((ref) {
-  return FirebaseFirestore.instance.collection('cart').snapshots();
-});
 
 
 class HomeScreen extends ConsumerWidget {
@@ -33,10 +23,13 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
+    // ref.refresh(productsStreamProvider);
+    // ref.refresh(favoriteStreamProvider);
+    // ref.refresh(cartStreamProvider);
     // var productData = ref.watch(futureProductProvider);
     final data = ref.watch(productsStreamProvider);
     mq = MediaQuery.of(context).size;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -267,8 +260,8 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       );
                     }, error: (error, stackTrace) {
-                      return const Center(
-                          child: Text("Please check network connection"));
+                      return  Center(
+                          child: Text(error.toString()));
                     }, loading: () {
                       return SizedBox(
                         height: 250,

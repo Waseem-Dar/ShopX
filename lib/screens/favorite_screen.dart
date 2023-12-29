@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:shopapp/providers/favorite_provider.dart';
-import 'package:shopapp/providers/home_provider.dart';
 import 'package:shopapp/screens/Notification_screen.dart';
 import 'package:shopapp/screens/details_screen.dart';
 import 'package:shopapp/screens/home_screen.dart';
 import 'package:shopapp/widget/drawer.dart';
 
 import '../providers/apis.dart';
+import '../providers/all_provider.dart';
 import '../widget/constant.dart';
 
 class FavoriteScreen extends ConsumerWidget {
@@ -19,8 +18,7 @@ class FavoriteScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final  items = ref.watch(favoriteStreamProvider);
-    // int favoriteCount;
-    // favoriteCount = items.length;
+
     return Scaffold(
       drawer: const ShowDrawer(),
       appBar: AppBar(

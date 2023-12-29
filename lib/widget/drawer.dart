@@ -68,12 +68,12 @@ class ShowDrawer extends ConsumerWidget {
               await FirebaseAuth.instance.signOut().then((value) async {
                 await GoogleSignIn().signOut().then((value) {
                   Navigator.popUntil(context, (route) => route.isFirst);
+                  Apis.auth  = FirebaseAuth.instance ;
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const AuthScreen(),
                       ));
-                  Apis.auth  = FirebaseAuth.instance ;
                 });
               });
 

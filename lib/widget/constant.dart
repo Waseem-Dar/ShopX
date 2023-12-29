@@ -18,8 +18,9 @@ class Constant{
     );
   }
 
-  static circularProgress(BuildContext context){
-    return const CircularProgressIndicator();
+
+  static void showProgressBar(BuildContext context,Color color){
+    showDialog(context: context, builder: (_)=> Center(child: CircularProgressIndicator(color: color,),));
   }
 
 }

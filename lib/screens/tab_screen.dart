@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shopapp/providers/cart_provider.dart';
+import 'package:shopapp/providers/all_provider.dart';
 // import 'package:provider/provider.dart';
 import 'package:shopapp/screens/cart_screen.dart';
 import 'package:shopapp/screens/home_screen.dart';
 import 'package:shopapp/screens/profile_screen.dart';
 import 'package:shopapp/screens/favorite_screen.dart';
 import 'package:shopapp/widget/constant.dart';
-import '../providers/favorite_provider.dart';
 
-class TabScreen extends ConsumerStatefulWidget {
+class TabScreen extends StatefulWidget {
   const TabScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() {
+  State<StatefulWidget> createState() {
     return _TabScreenState();
   }
 }
@@ -26,10 +25,14 @@ final List _tabs = [
   const ProfileScreen(),
 ];
 
-class _TabScreenState extends ConsumerState<TabScreen> {
+class _TabScreenState extends State<TabScreen> {
   @override
   Widget build(BuildContext context ) {
-    final itemCount = ref.watch(favoriteStreamProvider);
+    setState(() {
+
+    });
+
+
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -54,43 +57,53 @@ class _TabScreenState extends ConsumerState<TabScreen> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon:itemCount.when(
-                loading: () => CircularProgressIndicator(),
-                error: (error, _) => Text(""),
-                data: (data) {
-                 final count = data.docs.length;
-                  return Badge(
+              icon:Consumer(builder: (context, ref, child) {
+                final favItemCount = ref.watch(favoriteStreamProvider);
+                return favItemCount.when(
+                  loading: () => Icon(Icons.favorite_border_outlined,
+                    color: Constant.pink,),
+                  error: (error, _) => Icon(Icons.favorite_border_outlined,color:Colors.red,),
+                  data: (data) {
+                    final count = data.docs.length;
+                    return Badge(
 
-                    backgroundColor: Colors.red,
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    offset: const Offset(10, -10),
-                    label: Text(count.toString()),
-                    isLabelVisible:count==0?false:true,
-                    child: Icon(
-                      _currentIndex == 1
-                          ? Icons.favorite
-                          : Icons.favorite_border_outlined,
-                    ),
-                  );
-                },
-              ),
+                      backgroundColor: Colors.red,
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      offset: const Offset(10, -10),
+                      label: Text(count.toString()),
+                      isLabelVisible:count==0?false:true,
+                      child: Icon(
+                        _currentIndex == 1
+                            ? Icons.favorite
+                            : Icons.favorite_border_outlined,
+                      ),
+                    );
+                  },
+                );
+              },),
               label: 'Favorite',
             ),
             BottomNavigationBarItem(
-              icon: Consumer(builder: (context, ref, _) {
-                final itemCount = ref.watch(CartItemsCountProvider);
-                final isEmpty = itemCount > 0;
-                return Badge(
-                  backgroundColor: Colors.red,
-                  padding:EdgeInsets.symmetric(horizontal: 5) ,
-                  offset: Offset(10,-10),
-                  label: Text(itemCount.toString()),
-                  isLabelVisible: isEmpty,
-                  child: Icon(
-                    _currentIndex == 2
-                        ? Icons.shopping_cart_rounded
-                        : Icons.shopping_cart_outlined,
-                  ),
+              icon:Consumer(builder: (context, ref, child) {
+                final cartItemCount = ref.watch(cartStreamProvider);
+                return cartItemCount.when(
+                  error: (error, stackTrace) =>  Icon(Icons.shopping_cart_outlined,color: Colors.red,),
+                  loading: () => Icon(Icons.shopping_cart_outlined,color: Constant.pink,),
+                  data: (data) {
+                    final count = data.docs.length;
+                    return Badge(
+                      backgroundColor: Colors.red,
+                      padding:EdgeInsets.symmetric(horizontal: 5) ,
+                      offset: Offset(10,-10),
+                      label: Text(count.toString()),
+                      isLabelVisible: count == 0?false:true,
+                      child: Icon(
+                        _currentIndex == 2
+                            ? Icons.shopping_cart_rounded
+                            : Icons.shopping_cart_outlined,
+                      ),
+                    );
+                  },
                 );
               },),
               label: 'Cart',

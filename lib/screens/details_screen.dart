@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shopapp/main.dart';
-import 'package:shopapp/providers/cart_provider.dart';
-import 'package:shopapp/providers/home_provider.dart';
-import 'package:shopapp/providers/favorite_provider.dart';
+import 'package:shopapp/providers/all_provider.dart';
 import 'package:shopapp/widget/constant.dart';
 
 import '../providers/apis.dart';
-import 'home_screen.dart';
 
 class DetailScreen extends ConsumerWidget {
   final  dynamic getIndex;
@@ -19,8 +15,8 @@ class DetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final AsyncValue<List<dynamic>> product = ref.watch(futureProductProvider);
-    final items = ref.watch(favoriteItemsProvider);
-    final cartItems = ref.watch(itemsProvider);
+    // final items = ref.watch(favoriteItemsProvider);
+    // final cartItems = ref.watch(itemsProvider);
     return Scaffold(
       body:Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -149,16 +145,6 @@ class DetailScreen extends ConsumerWidget {
                   ),
                   onPressed: ()async{
                     await Apis.toggleCart(getIndex);
-                    // if (cartItems.contains(getIndex)) {
-                    //   Fluttertoast.showToast(
-                    //     msg: "Already added",
-                    //       gravity: ToastGravity.CENTER,
-                    //       backgroundColor: Colors.black54,
-                    //       fontSize: 16.0
-                    //   );
-                    // } else {
-                    //   ref.read(itemsProvider.notifier).addItem(getIndex);
-                    // }
                   }, child: const Text('Add To Cart',style: TextStyle(color: Colors.white),)),
             ),
           )

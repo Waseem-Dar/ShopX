@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shopapp/main.dart';
 import 'package:shopapp/providers/apis.dart';
-import 'package:shopapp/providers/cart_provider.dart';
+import 'package:shopapp/providers/all_provider.dart';
 import 'package:shopapp/screens/Notification_screen.dart';
 import 'package:shopapp/screens/home_screen.dart';
 import 'package:shopapp/widget/constant.dart';
@@ -107,7 +107,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                   iconColor: Colors.white,
                                   trailing: Icon(Icons.delete_forever_sharp,size: 50,),),),),
                               onDismissed: (direction) {
-                                Apis.fireStore.collection("cart").doc(data.docs[index].id).delete();
+                                Apis.fireStore.collection("allProducts").doc(Apis.user.uid).collection("cart").doc(data.docs[index].id).delete();
                               },
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -189,7 +189,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                                             MainAxisAlignment.spaceBetween,
                                             children: [
                                               InkWell(
-                                                  onTap: () {Apis.fireStore.collection("cart").doc(data.docs[index].id).delete();
+                                                  onTap: () {Apis.fireStore.collection("allProducts").doc(Apis.user.uid).collection("cart").doc(data.docs[index].id).delete();
                                                   },
                                                   child: Icon(
                                                     Icons.dangerous_outlined,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../main.dart';
+import '../../providers/all_provider.dart';
 import '../../widget/constant.dart';
 
-class SignInScreen extends StatelessWidget {
+class SignInScreen extends ConsumerWidget {
    SignInScreen({super.key});
 final emailController = TextEditingController();
 final passwordController = TextEditingController();
@@ -15,8 +16,9 @@ void userSignIn(){
 
   }else{}
 }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     mq = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -93,7 +95,9 @@ void userSignIn(){
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Constant.pink),
                             ),
-                            suffixIcon: IconButton(onPressed:(){} , icon: const Icon(Icons.check))
+                            suffixIcon: IconButton(onPressed:(){
+
+                            } , icon: const Icon(Icons.check))
                           ),
                         ),
                         const SizedBox(height: 20,),
@@ -102,6 +106,7 @@ void userSignIn(){
                           decoration:  InputDecoration(
                               contentPadding: const EdgeInsets.symmetric(vertical: 0,horizontal: 0),
                               labelText:'Password',
+
                               labelStyle: TextStyle(
                                 color: Constant.pink,
                               ),
