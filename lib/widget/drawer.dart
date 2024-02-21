@@ -20,7 +20,6 @@ class ShowDrawer extends ConsumerWidget {
       child: Drawer(
         child: ListView(children: [
           DrawerHeader(
-
             decoration: BoxDecoration(color: Constant.pink), child:  Column(
               children: [
                  CircleAvatar(
@@ -68,7 +67,6 @@ class ShowDrawer extends ConsumerWidget {
           ),
           ListTile(
             onTap: () async {
-              // await Apis.deleteUserData();
               await FirebaseAuth.instance.signOut().then((value) async {
                 await GoogleSignIn().signOut().then((value) {
                   Navigator.popUntil(context, (route) => route.isFirst);
