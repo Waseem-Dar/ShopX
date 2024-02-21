@@ -6,7 +6,7 @@ import 'package:shopapp/providers/apis.dart';
 import 'package:shopapp/providers/profile_provider.dart';
 import 'package:shopapp/screens/Notification_screen.dart';
 import 'package:shopapp/screens/auth_screens/auth_options.dart';
-import 'package:shopapp/screens/splash_screen.dart';
+import 'package:shopapp/screens/favorite_screen.dart';
 import 'package:shopapp/widget/constant.dart';
 
 
@@ -41,6 +41,10 @@ class ShowDrawer extends ConsumerWidget {
             trailing: Icon(Icons.keyboard_arrow_right_rounded),
           ),
            ListTile(
+             onTap: () {
+               Navigator.pop(context);
+               Navigator.push(context, MaterialPageRoute(builder: (context) => FavoriteScreen(),));
+             },
              iconColor:  Constant.pink,
             leading: Icon(Icons.favorite),
             title: const Text("Favorite"),
@@ -89,4 +93,10 @@ class ShowDrawer extends ConsumerWidget {
       ),
     );
   }
+}
+
+AlertDialog logOutDialog(BuildContext context){
+  return AlertDialog(
+
+  );
 }

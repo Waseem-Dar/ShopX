@@ -121,6 +121,35 @@ class Apis {
   }
 
 
+ static void updateProductRating(double newRating, DocumentSnapshot product) {
+    var currentRating = product['rating'];
+    double currentRate = currentRating['rate'];
+    int currentCount = currentRating['count'];
+
+    double newTotalRate = currentRate * currentCount + newRating;
+
+    double newAverageRate = newTotalRate / (currentCount + 1);
+
+    fireStore
+        .collection("allProducts")
+        .doc(user.uid)
+        .collection("products")
+        .doc(product.id)
+        .update({
+      'rating': {
+        'rate': newAverageRate,
+        'count': FieldValue.increment(1),
+      }
+    })
+        .then((_) {
+      print("Rating updated successfully");
+
+    }).catchError((error) {
+      print("Failed to update rating: $error");
+
+    });
+  }
+
 
 
 }

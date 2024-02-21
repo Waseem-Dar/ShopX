@@ -13,7 +13,8 @@ import 'package:shopapp/widget/shimmer_loader.dart';
 import '../providers/apis.dart';
 import '../providers/all_provider.dart';
 import 'Notification_screen.dart';
-import 'package:http/http.dart' as http;
+import 'package:carousel_slider/carousel_slider.dart';
+
 
 
 
@@ -23,16 +24,20 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // ref.refresh(productsStreamProvider);
-    // ref.refresh(favoriteStreamProvider);
-    // ref.refresh(cartStreamProvider);
-    // var productData = ref.watch(futureProductProvider);
+    var imageList = [
+      "assets/images/slide1.jpeg",
+      "assets/images/slide2.png",
+      "assets/images/slide3.jpg",
+      "assets/images/slide4.jpg",
+      "assets/images/sale1.jpg",];
     final data = ref.watch(productsStreamProvider);
     mq = MediaQuery.of(context).size;
-
     return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
       child: Scaffold(
+        backgroundColor: Colors.black12.withOpacity(0.03),
         drawer: const ShowDrawer(),
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
@@ -62,6 +67,7 @@ class HomeScreen extends ConsumerWidget {
           actions: [
             IconButton(
               onPressed: () {
+                FocusScope.of(context).unfocus();
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationScreen(),));
               },
               icon: const Icon(Icons.notifications_none),
@@ -96,6 +102,7 @@ class HomeScreen extends ConsumerWidget {
                                 borderSide:
                                 BorderSide(color: Constant.pink, width: 1),
                                 borderRadius: BorderRadius.circular(25)),
+                            prefixIcon: Icon(Icons.search,color: Colors.black54,),
                           ),
                         )),
                     const SizedBox(
@@ -108,7 +115,7 @@ class HomeScreen extends ConsumerWidget {
                       color: Colors.white,
                       minWidth: 0,
                       shape: const CircleBorder(),
-                      onPressed: () {},
+                      onPressed: () { FocusScope.of(context).unfocus();},
                       child:  Icon(
                         Icons.filter_list_sharp,
                         // color: Colors.white,
@@ -124,15 +131,24 @@ class HomeScreen extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(vertical: 15),
-                      width: double.infinity,
-                      height: mq.height * .2,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          image: const DecorationImage(
-                              image: AssetImage("assets/images/sale1.jpg"),
-                              fit: BoxFit.fill)),
+                    CarouselSlider(
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        enlargeCenterPage: true,
+                        viewportFraction: 1.0,
+                      ),
+                      items: imageList.map((image) {
+                        return  Container(
+                          margin: const EdgeInsets.symmetric(vertical: 15),
+                          width: double.infinity,
+                          height: mq.height * .2,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              image:  DecorationImage(
+                                  image: AssetImage(image),
+                                  fit: BoxFit.fill)),
+                        );
+                      }).toList(),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,11 +171,14 @@ class HomeScreen extends ConsumerWidget {
                         height: 260,
                         child: ListView.builder(
                           physics: const BouncingScrollPhysics(),
+
                           scrollDirection: Axis.horizontal,
                           itemCount: data.docs.length,
                           itemBuilder: (context, index) {
                             return InkWell(
+                              borderRadius: BorderRadius.circular(15),
                               onTap: () {
+                                FocusScope.of(context).unfocus();
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -168,6 +187,7 @@ class HomeScreen extends ConsumerWidget {
                                             )));
                               },
                               child: Card(
+                                margin: EdgeInsets.only(bottom: 6,right: 4,left: 4),
                                 elevation: 3,
                                 color: Colors.white,
                                 surfaceTintColor: Colors.white,
@@ -226,7 +246,9 @@ class HomeScreen extends ConsumerWidget {
                                                       Icons.star,
                                                       color: Colors.amber,
                                                     ),
-                                                    onRatingUpdate: (rating) {},
+                                                    onRatingUpdate: (rating) {
+                                                      Apis.updateProductRating(rating, data.docs[index]);
+                                                    },
                                                   ),
                                                   SizedBox(
                                                     width: 150,
@@ -299,12 +321,16 @@ class HomeScreen extends ConsumerWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           itemCount: data.docs.length,
                           shrinkWrap: true,
+                          crossAxisSpacing:10 ,
+                          mainAxisSpacing: 10,
                           gridDelegate:
                               const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2),
                           itemBuilder: (context, index) {
                             return InkWell(
+                              borderRadius:BorderRadius.circular(15) ,
                               onTap: () {
+                                FocusScope.of(context).unfocus();
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -316,7 +342,8 @@ class HomeScreen extends ConsumerWidget {
                               child: Card(
                                 color: Colors.white,
                                 surfaceTintColor: Colors.white,
-                                elevation: 3,
+                                margin: EdgeInsets.zero,
+                                elevation: 5,
                                 child: Padding(
                                   padding: const EdgeInsets.all(5.0),
                                   child: Column(
@@ -370,7 +397,9 @@ class HomeScreen extends ConsumerWidget {
                                                       Icons.star,
                                                       color: Colors.amber,
                                                     ),
-                                                    onRatingUpdate: (rating) {},
+                                                    onRatingUpdate: (rating) {
+                                                      Apis.updateProductRating(rating, data.docs[index]);
+                                                    },
                                                   ),
                                                   Text(
                                                     '\$ ${data.docs[index]['price']}',

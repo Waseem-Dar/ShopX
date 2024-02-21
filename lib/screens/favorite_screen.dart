@@ -106,6 +106,7 @@ class FavoriteScreen extends ConsumerWidget {
                                         const Icon(Icons.star, color: Colors.amber,
                                         ),
                                         onRatingUpdate: (rating) {
+                                          Apis.updateProductRating(rating, data.docs[index]);
                                         },
                                       ),
                                       Text('\$ ${data.docs[index]['price']}', style: const TextStyle(fontWeight: FontWeight.bold),

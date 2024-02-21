@@ -18,6 +18,7 @@ class DetailScreen extends ConsumerWidget {
     // final items = ref.watch(favoriteItemsProvider);
     // final cartItems = ref.watch(itemsProvider);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body:Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
@@ -119,6 +120,7 @@ class DetailScreen extends ConsumerWidget {
                       const Icon(Icons.star, color: Colors.amber,
                       ),
                       onRatingUpdate: (rating) {
+                        Apis.updateProductRating(rating, getIndex);
                       },
                     ),
                   ],

@@ -10,10 +10,8 @@ String about = "I FeeL HaPpY  😊 ❤";
 
 final aboutProvider = StateProvider<String>((ref) => about);
 
-// C:\Users\Hp\Downloads\flutter_windows_3.7.8-stable\flutter\bin
 
 final userDataProvider = Provider((ref) {
-// final user = Apis.auth.currentUser!;
   return Apis.user;
 });
 
