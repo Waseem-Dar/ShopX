@@ -34,12 +34,12 @@ jobs:
         run: flutter build apk --release --split-per-abi
 
       - name: Build IPA
-        run: |
-          flutter build ios
-          mkdir -p build/ios/iphoneos/Payload
-          ln -s ../Runner.app build/ios/iphoneos/Payload
-          cd build/ios/iphoneos
-          zip -r app.ipa Payload
+#        run: |
+#          flutter build ios
+#          mkdir -p build/ios/iphoneos/Payload
+#          ln -s ../Runner.app build/ios/iphoneos/Payload
+#          cd build/ios/iphoneos
+#          zip -r app.ipa Payload
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1
