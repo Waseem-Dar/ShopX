@@ -71,7 +71,6 @@ class FavoriteScreen extends ConsumerWidget {
                             width: double.infinity,
                             height: 200,
                             decoration: BoxDecoration(
-                              // color:Colors.grey,
                               image: DecorationImage(
                                   image:
                                   NetworkImage(data.docs[index]['image'])),

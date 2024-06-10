@@ -27,7 +27,7 @@ StreamProvider <QuerySnapshot<Map<String, dynamic>>>((ref) {
   return Apis.getProduct();
 });
 
-final favoriteStreamProvider =
+final favoriteStreamProvider = 
 StreamProvider<QuerySnapshot<Map<String, dynamic>>>((ref) {
   return Apis.getFavorite();
 });
